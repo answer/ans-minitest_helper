@@ -1,6 +1,6 @@
 # Ans::MinitestHelper
 
-TODO: Write a gem description
+minitest 用 helper 集
 
 ## Installation
 
@@ -20,7 +20,50 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+class ModelTest < ActiveSupport::TestCase
+  include Ans::MinitestHelper::Model
+
+  it "out of range validation" do
+    columns = passed_out_of_range_validation_columns(Model)
+    assert{columns == []}
+  end
+  it "out of range validation" do
+    columns = passed_out_of_range_validation_columns(Model,as: {name: "a"*20})
+    assert{columns == [:image_path]}
+  end
+
+  it "association indexes" do
+    columns = no_association_index_columns(Model)
+    assert{columns == []}
+  end
+  it "association indexes" do
+    columns = no_association_index_columns(Model,columns: %i{:my_association})
+    assert{columns == []}
+  end
+
+end
+```
+
+### passed_out_of_range_validation_columns(Model)
+
+mysql のカラムの最大長以上の値を投入した場合に validation error にならないカラムを配列にして返す
+
+文字列カラムのみチェックされる
+
+カラム名はシンボルで返される
+
+そのようなカラムが存在しない場合、空の配列が帰る
+
+* as: カラムに対して out_of_range な値を指定する
+
+### no_association_index_columns(Model)
+
+インデックスが存在しない `*_id` のカラムを配列にして返す
+
+そのようなカラムが存在しない場合、空の配列が帰る
+
+* columns: `*_id` 以外のカラムをチェックする場合はカラムをシンボルで列挙する
 
 ## Contributing
 

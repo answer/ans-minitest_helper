@@ -2,6 +2,6 @@ require "ans/minitest_helper/version"
 
 module Ans
   module MinitestHelper
-    # Your code goes here...
+    autoload :Model, "ans/minitest_helper/model.rb"
   end
 end
