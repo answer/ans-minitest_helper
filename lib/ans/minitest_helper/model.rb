@@ -1,13 +1,15 @@
 module Ans::MinitestHelper::Model
   def passed_out_of_range_validation_columns(model,as: {})
     model.columns.map{|column|
-      out_of_range_value = as[column.name.to_sym] || case column.type
+      column_name = column.name.to_sym
+      out_of_range_value = as[column_name] || case column.type
       when :string
         "a"*(column.limit+1)
       end
       if out_of_range_value
-        if model.new(column.name => out_of_range_value).valid?
-          column.name.to_sym
+        instance = model.new(column_name => out_of_range_value)
+        if instance.valid? || instance.errors[column_name].blank?
+          column_name
         end
       end
     }.compact
